@@ -11,10 +11,22 @@ public class ArbolHeap {
 		this.heap = new int[TAM - 1];
 	}
 
-	public boolean insertar(int elto) {
+	public boolean insertar(int elem) {
 		boolean exito = false;
-		
-		
+
+		if (this.ultimo <= TAM) {
+			if (this.ultimo == 0) {
+				// estructura vacia, ingreso el elemento como raiz
+				this.heap[1] = elem;
+				this.ultimo++;
+
+			} else {
+				this.heap[ultimo] = elem;
+
+			}
+			this.ultimo++;
+			exito = true;
+		}
 		return exito;
 	}
 
