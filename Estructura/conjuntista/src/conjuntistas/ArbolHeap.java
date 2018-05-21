@@ -11,23 +11,43 @@ public class ArbolHeap {
 		this.heap = new int[TAM - 1];
 	}
 
-	public boolean insertar(int elem) {
+	public boolean insertar(Comparable elem) {
 		boolean exito = false;
 
-		if (this.ultimo <= TAM) {
-			if (this.ultimo == 0) {
-				// estructura vacia, ingreso el elemento como raiz
-				this.heap[1] = elem;
-				this.ultimo++;
-
-			} else {
-				this.heap[ultimo] = elem;
-
-			}
+		if (this.ultimo < TAM) {
 			this.ultimo++;
+			this.heap[ultimo]=elem;
 			exito = true;
+			acomodar(heap,ultimo);
 		}
 		return exito;
+	}
+	private void acomodar(Comparable[] arr, int posicion){
+		if(posicion/2!=0){
+		Comparable padre = this.heap[posicion/2];
+		Comparable hijo = this.heap[posicion];
+		while(padre.compareTo(hijo)>0 && posicion>1){
+			System.out.println("ingresa while");
+			System.out.println("posicion:" + (posicion/2));
+			System.out.println("padre:" + padre.toString());
+			System.out.println("hijo: " + hijo.toString());
+			
+			
+			Comparable aux=padre;
+			this.heap[posicion/2] = hijo;
+			this.heap[posicion] = aux;
+			
+			posicion=posicion/2;
+			padre=arr[posicion/2];
+			hijo = arr[posicion];
+			System.out.println("antes de salir del while");
+			System.out.println("posicion: " + posicion);
+			System.out.println("padre:" + padre.toString());
+			System.out.println("hijo: " + hijo.toString());
+			System.out.println("----");
+			}
+		System.out.println("salio del while");
+		}
 	}
 
 	public boolean eliminarCima() {
