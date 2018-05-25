@@ -98,22 +98,20 @@ public class ArbolGen {
 	}
 
 	private Object padreAux(NodoGen nodo, Object elem) {
-		
-		NodoGen hijo = null;
-		Object padre=null;
+		Object padre = null;
 		if (nodo != null) {
-				hijo = nodo.getHijoIzquierdo();
-				System.out.println(hijo);
-				while(hijo != null && padre==null){
-					if(hijo.getElem().equals(elem)){
-						padre = nodo.getElem();
-					}else{
-					hijo= hijo.getHermanoDerecho();
-					System.out.println(hijo);
-					}
+			NodoGen hijo = nodo.getHijoIzquierdo();
+			while (hijo != null && padre == null) {
+				if (hijo.getElem().equals(elem)) {
+					padre = nodo.getElem();
+				} else {
+					hijo = hijo.getHermanoDerecho();
 				}
+			}
+			if (padre == null) {
 				hijo = nodo.getHijoIzquierdo();
-				padre = padreAux(hijo,elem);				
+				padre = padreAux(hijo, elem);
+			}
 		}
 		return padre;
 	}
