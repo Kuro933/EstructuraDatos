@@ -89,7 +89,7 @@ public class ArbolBB {
 			} else if (nodo.getElem().compareTo(elto) == 0) {
 				System.out.println(nodo.getElem());
 				if (nodo.getDerecho() == null && nodo.getIzquierdo() == null) {
-					nodo.setDerecho(nodo.getDerecho());
+					nodo=null;
 				}else if(caso2Der(nodo)|| (caso2Izq(nodo))){
 					
 				}
