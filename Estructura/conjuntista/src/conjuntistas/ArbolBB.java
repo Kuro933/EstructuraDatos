@@ -69,29 +69,44 @@ public class ArbolBB {
 
 		if (!this.esVacio()) {
 			if (this.raiz.getElem().compareTo(elto) == 0) {
-				this.raiz = null;
+				// reacomodamiento(this.raiz);
+			} else if (this.raiz.getIzquierdo().getElem().compareTo(elto) > 0) {
+				exito = eliminarAux(this.raiz.getIzquierdo(), this.raiz, elto);
 			} else {
-				exito = eliminarAux(this.raiz, elto);
+				exito = eliminarAux(this.raiz.getDerecho(), this.raiz, elto);
 			}
 		}
 		return exito;
 	}
 
-	private boolean eliminarAux(NodoABB nodo, Comparable elto) {
-		//TERMINARLO PREGUNATANDO LUNES
+	private boolean eliminarAux(NodoABB nodo, NodoABB padre, Comparable elto) {
+		// TERMINARLO PREGUNATANDO LUNES
 		boolean exito = false;
 
 		if (nodo != null) {
-			if (nodo.getElem().compareTo(elto) > 0) {
-				exito = eliminarAux(nodo.getIzquierdo(), elto);
-			} else if (nodo.getElem().compareTo(elto) < 0) {
-				exito = eliminarAux(nodo.getDerecho(), elto);
-			} else if (nodo.getElem().compareTo(elto) == 0) {
+			if (nodo.getElem().compareTo(elto) == 0) {
 				System.out.println(nodo.getElem());
 				if (nodo.getDerecho() == null && nodo.getIzquierdo() == null) {
-					nodo=null;
-				}else if(caso2Der(nodo)|| (caso2Izq(nodo))){
-					
+					if(padre.getIzquierdo() ==nodo){
+						padre.setIzquierdo(null);
+					}else{
+						padre.setDerecho(null);
+					}
+				} else if (caso2Der(nodo) && !(caso2Izq(nodo)) || !caso2Der(nodo) && caso2Izq(nodo)) {
+					if(nodo.getIzquierdo()!=null){
+						padre.setIzquierdo(nodo.getIzquierdo());
+					}else{
+						padre.setDerecho(nodo.getDerecho());
+					}
+				} else {
+
+				}
+				if (nodo.getElem().compareTo(elto) > 0) {
+					exito = eliminarAux(nodo.getIzquierdo(),
+							this.raiz.getIzquierdo(), elto);
+				} else if (nodo.getElem().compareTo(elto) < 0) {
+					exito = eliminarAux(nodo.getDerecho(),
+							this.raiz.getDerecho(), elto);
 				}
 			}
 		}
