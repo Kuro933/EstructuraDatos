@@ -79,40 +79,46 @@ public class ArbolBB {
 		return exito;
 	}
 
-	private boolean eliminarAux(NodoABB nodo, NodoABB padre, Comparable elto) {
-		// TERMINARLO PREGUNATANDO LUNES
+private boolean eliminarAux(NodoABB nodo, NodoABB padre, Comparable elto) {
 		boolean exito = false;
-
 		if (nodo != null) {
 			if (nodo.getElem().compareTo(elto) == 0) {
 				System.out.println(nodo.getElem());
+				System.out.println(padre.getElem());
 				if (nodo.getDerecho() == null && nodo.getIzquierdo() == null) {
-					if(padre.getIzquierdo() ==nodo){
+					if (padre.getIzquierdo() == nodo) {
 						padre.setIzquierdo(null);
-					}else{
+					} else {
 						padre.setDerecho(null);
 					}
-				} else if (caso2Der(nodo) && !(caso2Izq(nodo)) || !caso2Der(nodo) && caso2Izq(nodo)) {
-					if(nodo.getIzquierdo()!=null){
+				} else if (nodo.getElem().compareTo(padre.getElem()) < 0) {
+					if (caso2Izq(nodo)) {
 						padre.setIzquierdo(nodo.getIzquierdo());
-					}else{
-						padre.setDerecho(nodo.getDerecho());
+					} else {
+						padre.setIzquierdo(nodo.getDerecho());
 					}
+				} else if (caso2Der(nodo)) {
+					padre.setDerecho(nodo.getDerecho());
 				} else {
-
+					padre.setDerecho(nodo.getIzquierdo());
 				}
-				if (nodo.getElem().compareTo(elto) > 0) {
-					exito = eliminarAux(nodo.getIzquierdo(),
-							this.raiz.getIzquierdo(), elto);
-				} else if (nodo.getElem().compareTo(elto) < 0) {
-					exito = eliminarAux(nodo.getDerecho(),
-							this.raiz.getDerecho(), elto);
+				if (caso3(nodo)) {
+					reacomodamiento(nodo,padre);
 				}
+			}
+			if (nodo.getElem().compareTo(elto) > 0) {
+				exito = eliminarAux(nodo.getIzquierdo(), nodo, elto);
+			} else{
+				exito = eliminarAux(nodo.getDerecho(), nodo, elto);
 			}
 		}
 		return exito;
 	}
-	
+	private void reacomodamiento(NodoABB nodo,NodoABB padre){
+			if(padre.getElem().compareTo(nodo.getElem())<0){
+				
+			}
+	}	
 	private boolean caso2Izq(NodoABB nodo){
 		return nodo.getDerecho()==null && nodo.getIzquierdo()!=null;
 	}
