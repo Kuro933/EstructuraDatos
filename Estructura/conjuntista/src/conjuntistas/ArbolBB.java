@@ -93,13 +93,13 @@ public class ArbolBB {
 				} else if (nodo.getElem().compareTo(padre.getElem()) < 0) {
 					if (caso2Izq(nodo)) {
 						padre.setIzquierdo(nodo.getIzquierdo());
-					} else {
+					} else if (caso2Der(nodo)) {
+						padre.setIzquierdo(nodo.getDerecho());
+					} else if (!caso2Izq(nodo)) {
+						padre.setDerecho(nodo.getIzquierdo());
+					} else if (!caso2Der(nodo)) {
 						padre.setIzquierdo(nodo.getDerecho());
 					}
-				} else if (caso2Der(nodo)) {
-					padre.setDerecho(nodo.getDerecho());
-				} else {
-					padre.setDerecho(nodo.getIzquierdo());
 				}
 				if (caso3(nodo)) {
 					Comparable elem = buscar(nodo, padre);
@@ -109,7 +109,7 @@ public class ArbolBB {
 							+ padre.getElem());
 					System.out.println("el candidato es: " + elem);
 					nodo.setElem(elem);
-					System.out.println("despues de set del nodo"
+					System.out.println("despues de set del nodo "
 							+ nodo.getElem());
 				}
 
