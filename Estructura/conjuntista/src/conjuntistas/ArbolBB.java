@@ -70,7 +70,7 @@ public class ArbolBB {
 		if (!this.esVacio()) {
 			if (this.raiz.getElem().compareTo(elto) == 0) {
 				// reacomodamiento(this.raiz);
-			} else if (this.raiz.getIzquierdo().getElem().compareTo(elto) > 0) {
+			} else if (this.raiz.getElem().compareTo(elto) > 0) {
 				exito = eliminarAux(this.raiz.getIzquierdo(), this.raiz, elto);
 			} else {
 				exito = eliminarAux(this.raiz.getDerecho(), this.raiz, elto);
@@ -79,12 +79,11 @@ public class ArbolBB {
 		return exito;
 	}
 
-private boolean eliminarAux(NodoABB nodo, NodoABB padre, Comparable elto) {
+	private boolean eliminarAux(NodoABB nodo, NodoABB padre, Comparable elto) {
 		boolean exito = false;
 		if (nodo != null) {
 			if (nodo.getElem().compareTo(elto) == 0) {
-				System.out.println(nodo.getElem());
-				System.out.println(padre.getElem());
+
 				if (nodo.getDerecho() == null && nodo.getIzquierdo() == null) {
 					if (padre.getIzquierdo() == nodo) {
 						padre.setIzquierdo(null);
@@ -103,22 +102,44 @@ private boolean eliminarAux(NodoABB nodo, NodoABB padre, Comparable elto) {
 					padre.setDerecho(nodo.getIzquierdo());
 				}
 				if (caso3(nodo)) {
-					reacomodamiento(nodo,padre);
+					Comparable elem = buscar(nodo, padre);
+					System.out.println("el nodo que quiero eliminar"
+							+ nodo.getElem());
+					System.out.println("el padre del nodo a eliminar"
+							+ padre.getElem());
+					System.out.println("el candidato es: " + elem);
+					nodo.setElem(elem);
+					System.out.println("despues de set del nodo"
+							+ nodo.getElem());
 				}
-			}
-			if (nodo.getElem().compareTo(elto) > 0) {
-				exito = eliminarAux(nodo.getIzquierdo(), nodo, elto);
-			} else{
-				exito = eliminarAux(nodo.getDerecho(), nodo, elto);
+
+			} else {
+				if (nodo.getElem().compareTo(elto) > 0) {
+					exito = eliminarAux(nodo.getIzquierdo(), nodo, elto);
+				} else {
+					exito = eliminarAux(nodo.getDerecho(), nodo, elto);
+				}
 			}
 		}
 		return exito;
 	}
-	private void reacomodamiento(NodoABB nodo,NodoABB padre){
-			if(padre.getElem().compareTo(nodo.getElem())<0){
-				
+
+	private Comparable buscar(NodoABB nodo, NodoABB padre) {
+		NodoABB siguiente = nodo;
+		Comparable elem = null;
+		if (padre.getElem().compareTo(nodo.getElem()) > 0) {
+			// mayor de menores
+			siguiente = siguiente.getIzquierdo();
+			if (siguiente.getDerecho() != null) {
+				while (siguiente.getDerecho() != null) {
+					siguiente = siguiente.getDerecho();
+				}
 			}
-	}	
+			elem = siguiente.getElem();
+
+		}
+		return elem;
+	}
 	private boolean caso2Izq(NodoABB nodo){
 		return nodo.getDerecho()==null && nodo.getIzquierdo()!=null;
 	}
