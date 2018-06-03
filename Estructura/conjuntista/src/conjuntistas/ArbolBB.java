@@ -66,10 +66,10 @@ public class ArbolBB {
 
 	public boolean eliminar(Comparable elto) {
 		boolean exito = false;
-
+		// elimina el elemento que se indica
 		if (!this.esVacio()) {
 			if (this.raiz.getElem().compareTo(elto) == 0) {
-				// reacomodamiento(this.raiz);
+				this.raiz.setElem(buscarCandidato(this.raiz, null));
 			} else if (this.raiz.getElem().compareTo(elto) > 0) {
 				exito = eliminarAux(this.raiz.getIzquierdo(), this.raiz, elto);
 			} else {
@@ -80,6 +80,8 @@ public class ArbolBB {
 	}
 
 	private boolean eliminarAux(NodoABB nodo, NodoABB padre, Comparable elto) {
+		// revisa los casos que sea una hoja, que tenga 1 solo hijo o que tenga
+		// 2 hijos
 		boolean exito = false;
 		if (nodo != null) {
 			if (nodo.getElem().compareTo(elto) == 0) {
@@ -95,24 +97,23 @@ public class ArbolBB {
 						padre.setIzquierdo(nodo.getIzquierdo());
 					} else if (caso2Der(nodo)) {
 						padre.setIzquierdo(nodo.getDerecho());
-					} else if (!caso2Izq(nodo)) {
-						padre.setDerecho(nodo.getIzquierdo());
-					} else if (!caso2Der(nodo)) {
-						padre.setIzquierdo(nodo.getDerecho());
 					}
 				}
+				if (nodo.getElem().compareTo(padre.getElem()) > 0) {
+				} else if (caso2Izq(nodo)) {
+					padre.setDerecho(nodo.getIzquierdo());
+				} else if (caso2Der(nodo)) {
+					padre.setDerecho(nodo.getDerecho());
+				}
 				if (caso3(nodo)) {
-					Comparable elem = buscar(nodo, padre);
-					System.out.println("el nodo que quiero eliminar"
-							+ nodo.getElem());
-					System.out.println("el padre del nodo a eliminar"
-							+ padre.getElem());
+					Comparable elem = buscarCandidato(nodo, padre);
+					System.out.println("el nodo que quiero eliminar" + nodo.getElem());
+					System.out.println("el padre del nodo a eliminar" + padre.getElem());
 					System.out.println("el candidato es: " + elem);
 					nodo.setElem(elem);
-					System.out.println("despues de set del nodo "
-							+ nodo.getElem());
-				}
+					System.out.println("despues de set del nodo " + nodo.getElem());
 
+				}
 			} else {
 				if (nodo.getElem().compareTo(elto) > 0) {
 					exito = eliminarAux(nodo.getIzquierdo(), nodo, elto);
@@ -124,29 +125,36 @@ public class ArbolBB {
 		return exito;
 	}
 
-	private Comparable buscar(NodoABB nodo, NodoABB padre) {
+	private Comparable buscarCandidato(NodoABB nodo, NodoABB padre) {
 		NodoABB siguiente = nodo;
 		Comparable elem = null;
-		if (padre.getElem().compareTo(nodo.getElem()) > 0) {
-			// mayor de menores
-			siguiente = siguiente.getIzquierdo();
-			if (siguiente.getDerecho() != null) {
-				while (siguiente.getDerecho() != null) {
-					siguiente = siguiente.getDerecho();
-				}
-			}
-			elem = siguiente.getElem();
 
+		// mayor de menores
+		siguiente = siguiente.getIzquierdo();
+		
+		if (siguiente.getDerecho() != null) {
+			while (siguiente.getDerecho() != null) {
+				padre = siguiente;
+				siguiente = siguiente.getDerecho();
+			}
 		}
+		elem = siguiente.getElem();
+		padre.setDerecho(siguiente.getDerecho());
 		return elem;
 	}
-	private boolean caso2Izq(NodoABB nodo){
-		return nodo.getDerecho()==null && nodo.getIzquierdo()!=null;
+
+	private boolean caso3(NodoABB nodo) {
+		return (nodo.getIzquierdo() != null && nodo.getDerecho() != null);
 	}
-	
-	private boolean caso2Der(NodoABB nodo){
-		return nodo.getDerecho()!=null && nodo.getIzquierdo()==null;
+
+	private boolean caso2Izq(NodoABB nodo) {
+		return nodo.getDerecho() == null && nodo.getIzquierdo() != null;
 	}
+
+	private boolean caso2Der(NodoABB nodo) {
+		return nodo.getDerecho() != null && nodo.getIzquierdo() == null;
+	}
+
 	public Lista lista() {
 		// lista en orden ascendente todos los elementos del arbol
 		Lista lista = new Lista();
@@ -170,7 +178,7 @@ public class ArbolBB {
 	}
 
 	public Lista listarRango(Comparable minimo, Comparable maximo) {
-		//TERMINARLO PREGUNATANDO LUNES
+		// TERMINARLO PREGUNATANDO LUNES
 		Lista lista = new Lista();
 		listarRangoAux(this.raiz, minimo, maximo, lista);
 
@@ -181,7 +189,7 @@ public class ArbolBB {
 		// devuelve una lista con todos los elementos que esten en el rango dado
 		// [min,max]
 		if (nodo != null) {
-			if (nodo.getElem().compareTo(min) > 0 && nodo.getElem().compareTo(max) < 0) {
+			if (nodo.getElem().compareTo(min) >= 0 && nodo.getElem().compareTo(max) <= 0) {
 				listarRangoAux(nodo.getIzquierdo(), min, max, lista);
 				lista.insertar(nodo.getElem(), lista.longitud() + 1);
 				listarRangoAux(nodo.getDerecho(), min, max, lista);
