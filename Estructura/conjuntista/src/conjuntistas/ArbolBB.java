@@ -13,6 +13,7 @@ public class ArbolBB {
 	}
 
 	private boolean perteneceAux(NodoABB nodo, Comparable elto, boolean exito) {
+		//verifica si el elemento dado pertenece al arbol
 		while (nodo != null && !exito) {
 			if (nodo.getElem().equals(elto)) {
 				exito = true;
@@ -30,6 +31,7 @@ public class ArbolBB {
 	}
 
 	public boolean insertar(Comparable elto) {
+		//inserta un elemento en el arbol
 		boolean exito = true;
 		if (this.raiz == null) {
 			this.raiz = new NodoABB(elto);
@@ -87,12 +89,14 @@ public class ArbolBB {
 			if (nodo.getElem().compareTo(elto) == 0) {
 
 				if (nodo.getDerecho() == null && nodo.getIzquierdo() == null) {
+					//caso Hoja
 					if (padre.getIzquierdo() == nodo) {
 						padre.setIzquierdo(null);
 					} else {
 						padre.setDerecho(null);
 					}
 				} else if (nodo.getElem().compareTo(padre.getElem()) < 0) {
+					//casos de 1 solo hijo
 					if (caso2Izq(nodo)) {
 						padre.setIzquierdo(nodo.getIzquierdo());
 					} else if (caso2Der(nodo)) {
@@ -106,6 +110,7 @@ public class ArbolBB {
 					padre.setDerecho(nodo.getDerecho());
 				}
 				if (caso3(nodo)) {
+					//casos de 2 hijos
 					Comparable elem = buscarCandidato(nodo, padre);
 					System.out.println("el nodo que quiero eliminar" + nodo.getElem());
 					System.out.println("el padre del nodo a eliminar" + padre.getElem());
@@ -126,6 +131,7 @@ public class ArbolBB {
 	}
 
 	private Comparable buscarCandidato(NodoABB nodo, NodoABB padre) {
+		//busca al candidato para reemplazar al eliminar caso 2 hijos y elimina al hijo ese
 		NodoABB siguiente = nodo;
 		Comparable elem = null;
 
@@ -207,6 +213,7 @@ public class ArbolBB {
 	}
 
 	private Comparable minimoElemAux(NodoABB nodo) {
+		//da el menor elemento almacenado
 		Comparable elem = null;
 
 		if (nodo != null) {
@@ -223,6 +230,7 @@ public class ArbolBB {
 	}
 
 	public Comparable maximoElem() {
+		//da el mayor elemento almacenado
 		Comparable elem = null;
 
 		if (!this.esVacio()) {
@@ -288,6 +296,7 @@ public class ArbolBB {
 	}
 
 	public ArbolBB clone() {
+		//clona el arbol
 		ArbolBB clon = new ArbolBB();
 
 		if (!this.esVacio()) {
