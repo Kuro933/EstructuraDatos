@@ -13,7 +13,6 @@ public class ArbolBB {
 	}
 
 	private boolean perteneceAux(NodoABB nodo, Comparable elto, boolean exito) {
-		//verifica si el elemento dado pertenece al arbol
 		while (nodo != null && !exito) {
 			if (nodo.getElem().equals(elto)) {
 				exito = true;
@@ -31,7 +30,6 @@ public class ArbolBB {
 	}
 
 	public boolean insertar(Comparable elto) {
-		//inserta un elemento en el arbol
 		boolean exito = true;
 		if (this.raiz == null) {
 			this.raiz = new NodoABB(elto);
@@ -71,7 +69,7 @@ public class ArbolBB {
 		// elimina el elemento que se indica
 		if (!this.esVacio()) {
 			if (this.raiz.getElem().compareTo(elto) == 0) {
-				this.raiz.setElem(buscarCandidato(this.raiz, null));
+				this.raiz.setElem(buscarCandidato(this.raiz, this.raiz));
 			} else if (this.raiz.getElem().compareTo(elto) > 0) {
 				exito = eliminarAux(this.raiz.getIzquierdo(), this.raiz, elto);
 			} else {
@@ -88,36 +86,14 @@ public class ArbolBB {
 		if (nodo != null) {
 			if (nodo.getElem().compareTo(elto) == 0) {
 
-				if (nodo.getDerecho() == null && nodo.getIzquierdo() == null) {
-					//caso Hoja
-					if (padre.getIzquierdo() == nodo) {
-						padre.setIzquierdo(null);
-					} else {
-						padre.setDerecho(null);
-					}
-				} else if (nodo.getElem().compareTo(padre.getElem()) < 0) {
-					//casos de 1 solo hijo
-					if (caso2Izq(nodo)) {
-						padre.setIzquierdo(nodo.getIzquierdo());
-					} else if (caso2Der(nodo)) {
-						padre.setIzquierdo(nodo.getDerecho());
-					}
-				}
-				if (nodo.getElem().compareTo(padre.getElem()) > 0) {
-				} else if (caso2Izq(nodo)) {
-					padre.setDerecho(nodo.getIzquierdo());
-				} else if (caso2Der(nodo)) {
-					padre.setDerecho(nodo.getDerecho());
+				if (caso1(nodo, padre)) {
+					exito = true;
+				} else if (caso2(nodo, padre)) {
+					exito = true;
 				}
 				if (caso3(nodo)) {
-					//casos de 2 hijos
 					Comparable elem = buscarCandidato(nodo, padre);
-					System.out.println("el nodo que quiero eliminar" + nodo.getElem());
-					System.out.println("el padre del nodo a eliminar" + padre.getElem());
-					System.out.println("el candidato es: " + elem);
 					nodo.setElem(elem);
-					System.out.println("despues de set del nodo " + nodo.getElem());
-
 				}
 			} else {
 				if (nodo.getElem().compareTo(elto) > 0) {
@@ -130,22 +106,61 @@ public class ArbolBB {
 		return exito;
 	}
 
+	private boolean caso1(NodoABB nodo, NodoABB padre) {
+		boolean exito = false;
+		if (nodo.getDerecho() == null && nodo.getIzquierdo() == null) {
+			if (padre.getIzquierdo() == nodo) {
+				padre.setIzquierdo(null);
+			} else {
+				padre.setDerecho(null);
+			}
+			exito = true;
+		}
+		return exito;
+	}
+
+	private boolean caso2(NodoABB nodo, NodoABB padre) {
+		boolean exito = false;
+		if (nodo.getElem().compareTo(padre.getElem()) < 0) {
+			if (caso2Izq(nodo)) {
+				padre.setIzquierdo(nodo.getIzquierdo());
+			} else if (caso2Der(nodo)) {
+				padre.setIzquierdo(nodo.getDerecho());
+			}
+			exito = true;
+		}
+		if (nodo.getElem().compareTo(padre.getElem()) > 0) {
+			if (caso2Izq(nodo)) {
+				padre.setDerecho(nodo.getIzquierdo());
+			} else if (caso2Der(nodo)) {
+				padre.setDerecho(nodo.getDerecho());
+			}
+			exito = true;
+		}
+		return exito;
+	}
+
 	private Comparable buscarCandidato(NodoABB nodo, NodoABB padre) {
-		//busca al candidato para reemplazar al eliminar caso 2 hijos y elimina al hijo ese
 		NodoABB siguiente = nodo;
 		Comparable elem = null;
 
 		// mayor de menores
 		siguiente = siguiente.getIzquierdo();
-		
+
 		if (siguiente.getDerecho() != null) {
 			while (siguiente.getDerecho() != null) {
 				padre = siguiente;
 				siguiente = siguiente.getDerecho();
 			}
 		}
+		
 		elem = siguiente.getElem();
-		padre.setDerecho(siguiente.getDerecho());
+		if (hoja(siguiente)) {
+			caso1(siguiente, padre);
+		} else {
+			caso2(siguiente, padre);
+		}
+
 		return elem;
 	}
 
@@ -157,6 +172,10 @@ public class ArbolBB {
 		return nodo.getDerecho() == null && nodo.getIzquierdo() != null;
 	}
 
+	private boolean hoja(NodoABB nodo){
+		return (nodo.getIzquierdo()==null && nodo.getDerecho()==null);
+	}
+	
 	private boolean caso2Der(NodoABB nodo) {
 		return nodo.getDerecho() != null && nodo.getIzquierdo() == null;
 	}
@@ -186,7 +205,7 @@ public class ArbolBB {
 	public Lista listarRango(Comparable minimo, Comparable maximo) {
 		// TERMINARLO PREGUNATANDO LUNES
 		Lista lista = new Lista();
-		listarRangoAux(this.raiz, minimo, maximo, lista);
+		lista = listarRangoAux(this.raiz, minimo, maximo, lista);
 
 		return lista;
 	}
@@ -195,7 +214,7 @@ public class ArbolBB {
 		// devuelve una lista con todos los elementos que esten en el rango dado
 		// [min,max]
 		if (nodo != null) {
-			if (nodo.getElem().compareTo(min) >= 0 && nodo.getElem().compareTo(max) <= 0) {
+			if (nodo.getElem().compareTo(min) > 0 && nodo.getElem().compareTo(max) < 0) {
 				listarRangoAux(nodo.getIzquierdo(), min, max, lista);
 				lista.insertar(nodo.getElem(), lista.longitud() + 1);
 				listarRangoAux(nodo.getDerecho(), min, max, lista);
@@ -213,7 +232,6 @@ public class ArbolBB {
 	}
 
 	private Comparable minimoElemAux(NodoABB nodo) {
-		//da el menor elemento almacenado
 		Comparable elem = null;
 
 		if (nodo != null) {
@@ -230,7 +248,6 @@ public class ArbolBB {
 	}
 
 	public Comparable maximoElem() {
-		//da el mayor elemento almacenado
 		Comparable elem = null;
 
 		if (!this.esVacio()) {
@@ -296,7 +313,6 @@ public class ArbolBB {
 	}
 
 	public ArbolBB clone() {
-		//clona el arbol
 		ArbolBB clon = new ArbolBB();
 
 		if (!this.esVacio()) {
