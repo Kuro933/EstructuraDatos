@@ -1,0 +1,46 @@
+package Estructuras;
+
+public class NodoABB {
+	
+	private Comparable elem;
+	private NodoABB izquierdo;
+	private NodoABB derecho;
+	
+	public NodoABB(Comparable elem){
+		this.elem=elem;
+		this.izquierdo=null;
+		this.derecho = null;
+	}
+	public NodoABB(NodoABB izq,NodoABB der,Comparable elem){
+		this.izquierdo = izq;
+		this.derecho = der;
+		this.elem = elem;
+	}
+
+	public Comparable getElem() {
+		return elem;
+	}
+
+	public void setElem(Comparable elem) {
+		this.elem = elem;
+	}
+
+	public NodoABB getIzquierdo() {
+		return izquierdo;
+	}
+
+	public void setIzquierdo(NodoABB izquierdo) {
+		this.izquierdo = izquierdo;
+	}
+
+	public NodoABB getDerecho() {
+		return derecho;
+	}
+
+	public void setDerecho(NodoABB derecho) {
+		this.derecho = derecho;
+	}
+	
+	
+
+}
